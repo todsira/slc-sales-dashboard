@@ -1,0 +1,5 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {validateSource} from '../src/validate.mjs';
+const env={HYPERDRIVE:{connectionString:'synthetic'}};
+function fake(bad=false){return class{async connect(){} async end(){} async query(sql){if(sql.includes('current_user AS name'))return {rows:[{name:'slc_dashboard_reader',rolsuper:bad,rolinherit:false,rolcreaterole:false,rolcreatedb:false,rolreplication:false,rolbypassrls:false,memberships:0,customer:false,vehicle:false,writes:0,unsafe_tables:0}]};if(sql.includes('LIMIT 0'))throw Object.assign(Error('denied'),{code:'42501'});if(sql.includes('sales,(SELECT'))return {rows:[{sales:0,intake:0}]};return {rows:[]};}}}
+test('validation requires exact narrow role and returns aggregate-only samples',async()=>{const r=await validateSource(env,fake());assert.equal(r.privileges,'passed');assert.equal(r.samples.length,3);assert.equal(r.samples[0].sales.trips,0);assert(!JSON.stringify(r).includes('synthetic'));});
+test('unexpected elevated privilege blocks all samples',async()=>{await assert.rejects(validateSource(env,fake(true)));});

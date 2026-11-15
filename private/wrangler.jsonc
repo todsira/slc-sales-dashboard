@@ -1,11 +1,32 @@
 {
-  "name": "slc-sales-dashboard-private",
+  "name": "slc-sales-dashboard",
   "main": "src/worker.mjs",
-  "compatibility_flags": ["nodejs_compat"],
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
   "compatibility_date": "2026-11-14",
   "workers_dev": false,
   "preview_urls": false,
-  "assets": { "directory": "./public", "binding": "ASSETS", "run_worker_first": true },
-  "observability": { "enabled": false },
-  "vars": { "REAL_DATA_ENABLED": "false" }
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": true
+  },
+  "observability": {
+    "enabled": false
+  },
+  "hyperdrive": [
+    {
+      "binding": "HYPERDRIVE",
+      "id": "c0b3684d10bb4fbcbadee6cce7534f58"
+    }
+  ],
+  "vars": {
+    "REAL_DATA_ENABLED": "false",
+    "VALIDATION_ONLY": "true",
+    "APP_ORIGIN": "https://dashboard.silacc.com",
+    "ACCESS_TEAM_DOMAIN": "todsira.cloudflareaccess.com",
+    "ACCESS_AUD": "e144131a184a49930974221159fe8fb13cd84b572e42c856ec18039544a496f5"
+  },
+  "keep_vars": true
 }
