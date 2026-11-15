@@ -1,0 +1,1 @@
+{"name":"slc-sales-dashboard","version":"1.0.0","private":true,"type":"module","engines":{"node":">=22"},"scripts":{"build":"node scripts/build.mjs","test":"node --test","check":"node --check public/app.js && node --check public/demo-data.js && npm test","dev":"node scripts/serve.mjs"}}
