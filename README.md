@@ -6,7 +6,7 @@ Sales-first Thai dashboard for โรงโม่หินศิลาชัย�
 
 ## Run and check
 
-Use Node.js 22 or newer (no third-party dependencies).
+Use Node.js 22 or newer. The browser app has no third-party runtime dependencies; Wrangler is pinned as a development dependency for deployment.
 
 ```sh
 npm ci
@@ -17,20 +17,34 @@ npm run dev
 
 Open http://localhost:3000. `npm run build` creates `dist/`; it is generated and not committed.
 
-## Deploy to Cloudflare Pages from GitHub
+## Deploy using Cloudflare Workers Builds (Wrangler)
 
-1. Cloudflare dashboard → Workers & Pages → Create application → Pages → Import an existing Git repository.
-2. Select `todsira/slc-sales-dashboard`.
-3. Framework preset: **None**.
-4. Production branch: **master** (or the branch you explicitly choose).
-5. Build command: **npm run build**.
-6. Build output directory: **dist**.
-7. Root directory: leave blank. Set Node version **22** if needed.
-8. Deploy. No environment variables, secrets, database bindings, Workers or Tunnel are needed for this demo.
+The repository supports the Cloudflare setup screen with a **Deploy command** field. That is Workers Builds, not the original Pages Git build screen. It serves the same static dashboard through Workers Static Assets; no custom server script or database is required.
 
-This uses **Cloudflare Pages**, not `cloudflared` Tunnel. Git-connected Pages automatically builds updates to its selected production branch. Repository preparation does not itself configure or deploy a Cloudflare project.
+| Setting | Value |
+| --- | --- |
+| Repository | `todsira/slc-sales-dashboard` |
+| Production branch | `master` |
+| Build command | `npm run build` |
+| Deploy command | `npx wrangler deploy` |
+| Root directory | Repository root (blank) |
+| Node version | `22` |
+| Worker name | `slc-sales-dashboard` |
 
-Reference: https://developers.cloudflare.com/pages/framework-guides/deploy-anything/
+`wrangler.jsonc` declares `dist` as the static asset directory. The Cloudflare Worker project name must match this name. Workers Builds supplies its deployment authorization; do not commit Cloudflare tokens or Supabase secrets. No database variables are needed for this demo.
+
+For local authenticated deployment, `npm run deploy` builds and runs Wrangler. To validate configuration **without uploading or deploying**, run `npm run deploy:check`. Local deployment requires your own authorized Cloudflare login; never put tokens in this repository.
+
+## Alternative: Cloudflare Pages
+
+If deliberately using the **Pages** Git integration instead, use framework **None**, branch **master**, build command **npm run build**, and build output **dist**. Pages automatically uploads its output and has no separate `wrangler deploy` command. Do not mix the two setup screens. This does not use `cloudflared` Tunnel.
+
+Repository changes alone do not verify deployment success. A pre-existing connected Git build may deploy the updated commit automatically; check its build result and served site before claiming completion.
+
+Official references:
+- https://developers.cloudflare.com/workers/ci-cd/builds/configuration/
+- https://developers.cloudflare.com/workers/static-assets/get-started/
+- https://developers.cloudflare.com/pages/framework-guides/deploy-anything/
 
 ## Layout and behavior
 
