@@ -8,3 +8,9 @@ dist/
 .wrangler/
 *.log
 .DS_Store
+
+# Private integration
+private/node_modules/
+private/.wrangler/
+.env*
+.dev.vars*

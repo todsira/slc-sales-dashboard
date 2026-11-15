@@ -1,0 +1,1 @@
+{"name":"slc-private-dashboard","private":true,"type":"module","scripts":{"test":"node --test test/*.test.mjs","check":"node --check src/worker.mjs && node --check public/app.js && npm test","deploy:check":"wrangler deploy --dry-run"},"dependencies":{"jose":"6.1.3"},"devDependencies":{"wrangler":"4.162.0"}}

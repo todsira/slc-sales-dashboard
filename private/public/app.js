@@ -1,0 +1,10 @@
+const $=id=>document.getElementById(id);const fmt=n=>Number(n).toLocaleString('th-TH',{maximumFractionDigits:2});let controller;
+function text(parent,tag,value){const el=document.createElement(tag);el.textContent=value;parent.append(el);return el}
+function rows(id,values){const root=$(id);root.replaceChildren();for(const valuesRow of values){const tr=document.createElement('tr');for(const value of valuesRow)text(tr,'td',value);root.append(tr)}}
+function clear(){for(const id of ['cards','products','daily','intake'])$(id).replaceChildren()}
+async function load(period){controller?.abort();controller=new AbortController();const current=controller;clear();$('status').textContent='กำลังโหลดข้อมูล…';try{const res=await fetch('/api/summary?period='+encodeURIComponent(period),{cache:'no-store',credentials:'same-origin',signal:current.signal});if(!res.ok)throw Error();const d=await res.json();if(current!==controller)return;
+$('status').textContent=`${d.range.start} ถึง ${d.range.end} · ตรวจสอบ ${new Date(d.checkedAt).toLocaleString('th-TH',{timeZone:'Asia/Bangkok'})} · เวลาซิงก์ล่าสุดในรายการ ${d.sourceMaxSync??'ไม่พบรายการ'} · ${d.warning}`;
+for(const[label,n,unit]of[['มูลค่าขาย',d.sales.amount,'บาท'],['ปริมาณขาย',d.sales.tonnes,'ตัน'],['เงินสด',d.sales.cash,'บาท'],['เครดิต',d.sales.credit,'บาท']]){const card=text($('cards'),'div','');card.className='card';text(card,'h2',label);text(card,'strong',fmt(n)+' '+unit)}
+rows('products',d.sales.products.map(p=>[p.name,fmt(p.tonnes),fmt(p.amount)]));rows('daily',d.daily.map(r=>[r.date,fmt(r.sales),fmt(r.intake)]));for(const[label,key]of[['ขึ้นโม่โดยตรง','direct'],['เทสต็อก','stock'],['ย้ายสต็อกเข้าโม่','internal'],['ไม่ระบุกิจกรรม','unclassified']])text($('intake'),'p',label+': '+fmt(d.intake[key])+' ตัน');if(d.sales.other!==0)text($('cards'),'p','วิธีชำระอื่น/ไม่ระบุ: '+fmt(d.sales.other)+' บาท');
+}catch(e){if(current!==controller)return;clear();$('status').textContent='ยังแสดงข้อมูลไม่ได้ กรุณาตรวจสอบการเข้าสู่ระบบและการตั้งค่า ไม่มีการใช้ข้อมูลสาธิตแทนยอดจริง';}}
+document.querySelectorAll('[data-period]').forEach(b=>b.addEventListener('click',()=>load(b.dataset.period)));load('day');
