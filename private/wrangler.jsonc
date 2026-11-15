@@ -22,8 +22,8 @@
     }
   ],
   "vars": {
-    "REAL_DATA_ENABLED": "false",
-    "VALIDATION_ONLY": "true",
+    "REAL_DATA_ENABLED": "true",
+    "VALIDATION_ONLY": "false",
     "APP_ORIGIN": "https://dashboard.silacc.com",
     "ACCESS_TEAM_DOMAIN": "todsira.cloudflareaccess.com",
     "ACCESS_AUD": "e144131a184a49930974221159fe8fb13cd84b572e42c856ec18039544a496f5"
