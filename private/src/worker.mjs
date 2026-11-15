@@ -1,5 +1,6 @@
 import {authorize} from './auth.mjs';
-import {periodRange,readSource} from './data.mjs';
+import {periodRange} from './data.mjs';
+import {readPostgres as readSource} from './postgres.mjs';
 function safe(response){const headers=new Headers(response.headers);headers.set('Cache-Control','private, no-store');headers.set('X-Content-Type-Options','nosniff');headers.set('Referrer-Policy','no-referrer');headers.set('Content-Security-Policy',"default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");return new Response(response.body,{status:response.status,headers});}
 export default {async fetch(request,env){
   try{await authorize(request,env)}catch{return safe(new Response('Sign-in required or access not configured',{status:403}))}

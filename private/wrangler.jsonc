@@ -1,6 +1,7 @@
 {
   "name": "slc-sales-dashboard-private",
   "main": "src/worker.mjs",
+  "compatibility_flags": ["nodejs_compat"],
   "compatibility_date": "2026-11-14",
   "workers_dev": false,
   "preview_urls": false,
