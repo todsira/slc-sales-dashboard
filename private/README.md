@@ -3,7 +3,7 @@
 This is newly reconstructed source, not the lost earlier scaffold. Public demo and its default build remain unchanged. **Do not deploy/enable until all gates below pass.** No database keys, customer records, or actual figures are included.
 
 ## Current validation limits
-`jose` is pinned but NOT installed because the prior installation approval was rejected. No workaround was used. Native data tests and syntax can run; JWT integration, bundling, runtime and browser QA are unverified. A reproducible private dependency lockfile must be generated only after installation is permitted. Never reuse prior scaffold test claims.
+After explicit owner approval, jose 6.1.3 was installed from official npm and the private dependency lockfile generated. Twenty-two native tests pass, including valid/expired/tampered owner JWTs, wrong audience/email/type/origin, disabled API and anonymous asset rejection. Wrangler dry-run bundling passes. Real Access-policy, live runtime, data reconciliation and browser QA remain unverified. Never reuse prior lost-scaffold test claims.
 
 ## Architecture
 Separate Worker, all routes designed to be protected by Cloudflare Access RS256 signature/issuer/audience, exact owner email, expiry and application token type. All responses no-store. Static assets run through Worker first. No CORS or public data API. API returns aggregated data only, no customer/vehicle/ticket rows. Credentials remain server-side; no client environment injection. Public demo must remain a separate deployment.

@@ -1,13 +1,14 @@
 export function periodRange(period, today = new Date().toLocaleDateString('en-CA', {timeZone:'Asia/Bangkok'})) {
   if (!['day','week','month'].includes(period) || !/^\d{4}-\d{2}-\d{2}$/.test(today)) throw Error('Invalid period');
   const end = new Date(today+'T00:00:00Z');
+  if(!Number.isFinite(end.getTime())||end.toISOString().slice(0,10)!==today)throw Error('Invalid date');
   const start = new Date(end);
   if (period==='week') start.setUTCDate(start.getUTCDate()-6);
   if (period==='month') start.setUTCDate(1);
   return {start:start.toISOString().slice(0,10),end:today};
 }
-function validDate(value,range){if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(value)||!Number.isFinite(Date.parse(value+'T00:00:00Z')))throw Error('Invalid source date');return value>=range.start&&value<=range.end;}
-function number(value) { if(value===null || value==='' || !Number.isFinite(Number(value))) throw Error('Invalid source number'); return Number(value); }
+function validDate(value,range){if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(value)||!Number.isFinite(Date.parse(value+'T00:00:00Z'))||new Date(value+'T00:00:00Z').toISOString().slice(0,10)!==value)throw Error('Invalid source date');return value>=range.start&&value<=range.end;}
+function number(value) { if(!['number','string'].includes(typeof value) || (typeof value==='string'&&!/^-?\d+(?:\.\d+)?$/.test(value)) || !Number.isFinite(Number(value))) throw Error('Invalid source number'); return Number(value); }
 export function aggregate(sales,intake,range) {
   const out={range,sales:{amount:0,tonnes:0,trips:0,cash:0,credit:0,other:0,products:[]},intake:{direct:0,stock:0,internal:0,unclassified:0,trips:0},daily:[],sourceMaxSync:null,warning:'ข้อมูลตามรอบซิงก์ ไม่ใช่การยืนยันว่าซิงก์ครบ; วันนี้อาจยังไม่สิ้นวัน'};
   const products=new Map(),daily=new Map();
